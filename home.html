@@ -1,0 +1,255 @@
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Dynamic Weather app</title>
+   <style>
+        
+
+*{
+    padding: 0;
+    margin: 0;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+body{
+    background: #f3f2ef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap:wrap;
+    height:100vh;
+    width:100vw;
+}
+.box{
+    width: 20vw;
+    height: 60vh;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background:#a5bbdd;
+    position:relative;
+    overflow: hidden;
+    transform:translate3d(0,0,0);
+    min-width:20rem;
+    min-height:35rem;
+
+}
+.wave{
+    opacity: 0.3;
+    position:absolute;
+    top: 120%;
+    left:50%;
+    background-color: white;
+    width: 50rem;
+    height: 50rem;
+    margin-left:-25rem;
+    margin-top:-25rem;
+    transform-origin:50% 48%;
+    border-radius: 43%;
+    animation: drift 3000ms infinite linear;
+    z-index:1;
+}
+.wave -three{
+   animation: drift 5000ms infinite linear;
+   z-index: 2;
+   opacity: 0.2;
+}
+.wave -two{
+    animation: drift 7000ms infinite linear;
+    opacity: 0.1;
+    z-index: 3 !important;
+}
+.box::after{
+    content:"";
+    display: block;
+    left:0;
+    top: 0;
+    width:100%;
+    height:100%;
+    z-index:11;
+    transform:translate3d(0,0,0);
+}
+@keyframes drift{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+.info{
+    position: absolute;
+    bottom:0;
+    width:100%;
+    height:45%;
+    z-index:4;
+}
+.location{
+    margin-top: 1.5rem;
+    text-align: center;
+    font-weight:800;
+    font-size:2rem;
+}
+.fa-street-view{
+    animation: rotates 3s linear infinite alternate;
+}
+@keyframes rotates{
+    from{
+        transform:translateX(-0.5rem);
+    }
+    to{
+        transform:translateX(0.5rem);
+    }
+}
+#date{
+    text-align: center;
+    margin-top:0.5rem;
+    color:#57606f;
+    font-size:1.2rem;
+    font-weight:300;
+    text-transform:uppercase;
+}
+.temp{
+    margin-top:2.5rem;
+    text-align:center;
+    font-size:3rem;
+}
+.tempmin_max{
+    text-align:center;
+    margin-top:0.3rem;
+    font-weight:300;
+    font-size:1.2rem;
+    color:#57606f;
+}
+#weather-condition{
+    height:55%;
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    font-size:3em;
+}
+#weather-condition .fa-sun{
+    font-size:6rem;
+    animation:fas-anime 3s linear infinite alternate;
+}
+@keyframes fas-anime{
+    from{
+        transform:scale(0.8);
+    }
+    to{
+        transform: scale(1.0);
+    }
+}
+@media (max-width:600px){
+    .box{
+        width:90vw;
+        height:80vh; 
+    }
+}
+
+
+    </style>
+   
+    
+</head>
+<body>
+    <div class="box">
+        <div class="wave -one"></div>
+        <div class="wave -two"></div>
+        <div class="wave -three"></div>
+
+        <div id="weather-condition">
+         <i class="fas fa-sun" style="color:#eccc68"></i>
+        </div>
+        <div class="info">
+            <h2 class="location"><i class="fas fa-street-view"> {%location%} | {%country%}</i></h2>
+            <p id="date"> </p>
+            <h1 class="temp">{%temp%}&deg;C</h1>
+            <h3 class="tempmin_max"> Min: {%tempMin%}&deg;C | Max: {%tempMax%}&deg;C </h3>
+
+        </div>
+        
+    </div>
+    <script>
+        //Acquiring important id's from HTML document
+        const curDate = document.getElementById('date');
+        const weathercon = document.getElementById('weather-condition');
+
+        const tempstatus = '{%tempstatus%}';
+        if(tempstatus=="Sunny"){
+            weathercondition.innerHTML = "<i class='fas fa-sun' style='color:#eccc68'>";
+        }
+        else if(tempstatus=="Clouds"){
+            weathercondition.innerHTML = "<i class='fas fa-cloud' style='color:#eccc68'>";
+        }
+        else if(tempstatus=="Rainy"){
+            weathercondition.innerHTML = "<i class='fas fa-cloud-rain' style='color:#eccc68'>";
+        }
+        //Fat Arrow function to find out Current Day using Date object in JS
+        const getCurrentDay = ()=> {
+        var date = new Date();
+        var days = new Array(7);
+        days[0]="SUN";
+        days[1]="MON";
+        days[2]="TUE";
+        days[3]="WED";
+        days[4]="THUR";
+        days[5]="FRI";
+        days[6]="SAT";
+
+        
+        var dayName = days[date.getDay()];
+        var monthName = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"    
+        ];
+        var month = date.getMonth();
+        var monthName = monthName[month];
+        var todayDate = date.getDate();
+        var year = date.getFullYear();
+
+        return `${dayName} | ${monthName} ${todayDate}`
+        
+
+        };
+        
+        
+     //Fat Arrow Function to find out Current Time using Date Object
+        const getCurrentTime = ()=>{
+        var date = new Date();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var period = 'PM'
+
+        if(hours<12){
+            period = "AM";
+        }
+        if(minutes<10){
+          minutes='0'+minutes;
+        } 
+        if(hours>12){
+            hours-=12;
+        }
+
+        return `${hours}:${minutes} ${period}`
+        
+     };
+
+     curDate.innerHTML = getCurrentDay() +" | " +getCurrentTime();
+        
+
+    </script>
+</body>
+</html>
